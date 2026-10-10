@@ -1,0 +1,54 @@
+{
+  "profiles": [
+    {
+      "id": "ollama-local",
+      "label": "Ollama · local",
+      "provider": "ollama",
+      "model": "qwen3:8b",
+      "base_url": "http://localhost:11434/v1",
+      "tool_calling": true,
+      "max_concurrency": 1
+    },
+    {
+      "id": "ollama-cloud",
+      "label": "Ollama · cloud",
+      "provider": "ollama",
+      "model": "gpt-oss:20b",
+      "base_url": "https://ollama.com/v1",
+      "api_key_env": "OLLAMA_API_KEY",
+      "tool_calling": true,
+      "max_concurrency": 3
+    },
+    {
+      "id": "ollama-signed-in",
+      "label": "Ollama · signed-in app",
+      "provider": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "base_url": "http://localhost:11434/v1",
+      "tool_calling": true,
+      "max_concurrency": 3
+    },
+    {
+      "id": "openai",
+      "label": "OpenAI · configured model",
+      "provider": "openai",
+      "model": "gpt-4.1-mini",
+      "base_url": "https://api.openai.com/v1",
+      "api_key_env": "OPENAI_API_KEY",
+      "tool_calling": true,
+      "paid": true,
+      "max_concurrency": 3
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini · configured model",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "api_key_env": "GOOGLE_API_KEY",
+      "tool_calling": true,
+      "paid": true,
+      "max_concurrency": 3
+    }
+  ],
+  "mcp_servers": []
+}

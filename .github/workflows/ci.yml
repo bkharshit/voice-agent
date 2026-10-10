@@ -1,0 +1,40 @@
+name: Verify application
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: voice
+          POSTGRES_PASSWORD: voice
+          POSTGRES_DB: voice_agent_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U voice -d voice_agent_test"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      VOICE_DATABASE_URL: postgresql+asyncpg://voice:voice@127.0.0.1:5432/voice_agent_test
+      TEST_DATABASE_URL: postgresql+asyncpg://voice:voice@127.0.0.1:5432/voice_agent_test
+      TEST_MCP_URL: http://127.0.0.1:55434/mcp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: uv sync --frozen --python 3.12
+      - run: uv run voice-agent migrate
+      - run: uv run ruff check services migrations tests
+      - run: |
+          uv run python tests/mcp_fixture.py > /tmp/mcp.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:55434/mcp; then break; fi
+            sleep 1
+          done
+          uv run pytest -q
+      - run: npm ci
+      - run: npm run test:web
+      - run: npm run build

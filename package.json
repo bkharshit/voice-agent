@@ -1,0 +1,14 @@
+{
+  "name": "voice-agent-workspace",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "packages/client-sdk"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web",
+    "typecheck": "npm run typecheck --workspace apps/web",
+    "test:web": "npm run test --workspace apps/web"
+  }
+}

@@ -1,0 +1,13 @@
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.mobile-new {
+  display: none;
+}
+@media (max-width: 720px) {
+  .mobile-new {
+    display: flex;
+  }
+}
